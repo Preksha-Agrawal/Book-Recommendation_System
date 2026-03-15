@@ -4,9 +4,9 @@ import gdown
 def download_models():
     os.makedirs("model", exist_ok=True)
     files = {
-        "model/books.pkl":        "1ABC123XYZDEF456",   # paste your ID here
-        "model/tfidf_matrix.pkl": "1DEF456UVWXYZ789",   # paste your ID here
-        "model/genre_matrix.pkl": "1GHI789RSTUVW012",   # paste your ID here
+        "model/books.pkl":        "1ABC123XYZDEF456",   
+        "model/tfidf_matrix.pkl": "1DEF456UVWXYZ789",   
+        "model/genre_matrix.pkl": "1GHI789RSTUVW012",   
     }
     for path, file_id in files.items():
         if not os.path.exists(path):
