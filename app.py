@@ -1,3 +1,20 @@
+import os
+import gdown
+
+def download_models():
+    os.makedirs("model", exist_ok=True)
+    files = {
+        "model/books.pkl":        "1ABC123XYZDEF456",   # paste your ID here
+        "model/tfidf_matrix.pkl": "1DEF456UVWXYZ789",   # paste your ID here
+        "model/genre_matrix.pkl": "1GHI789RSTUVW012",   # paste your ID here
+    }
+    for path, file_id in files.items():
+        if not os.path.exists(path):
+            print(f"Downloading {path}...")
+            gdown.download(f"https://drive.google.com/uc?id={file_id}", path, quiet=False)
+
+download_models()
+
 from flask import Flask, render_template, request
 from urllib.parse import quote
 import joblib
