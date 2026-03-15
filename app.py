@@ -4,9 +4,9 @@ import gdown
 def download_models():
     os.makedirs("model", exist_ok=True)
     files = {
-        "model/books.pkl":        "1ABC123XYZDEF456",   
-        "model/tfidf_matrix.pkl": "1DEF456UVWXYZ789",   
-        "model/genre_matrix.pkl": "1GHI789RSTUVW012",   
+        "model/books.pkl":        "1fP9f7enux_nHFWV4FGjW7szv-dplnJ3S",
+        "model/tfidf_matrix.pkl": "1_hFTUQ__6uZuRHh4CvawQJ8EvS1ekxzy",
+        "model/genre_matrix.pkl": "1Rf5jpnenOaU6EphzjLq1b0Ahsv4NKXQ-",
     }
     for path, file_id in files.items():
         if not os.path.exists(path):
@@ -22,7 +22,6 @@ import scipy.sparse as sp
 from sklearn.metrics.pairwise import cosine_similarity
 
 app = Flask(__name__)
-
 app.jinja_env.filters['urlencode'] = lambda u: quote(str(u))
 
 df           = joblib.load("model/books.pkl")
@@ -85,11 +84,9 @@ def rec(bookTitle):
         name_lower = name.lower()
         author     = df.iloc[bookIndex]['Author']
 
-        
         if bookTitle.lower() in name_lower:
             continue
 
-        
         if series and series in name_lower:
             continue
 
@@ -106,6 +103,11 @@ def rec(bookTitle):
         popular    = df.iloc[bookIndex]['popular']
         num_rating = df.iloc[bookIndex]['numr']
 
+        if rating < 4.0:
+            continue
+        if num_rating < 50000:
+            continue
+
         genre          = set(df.iloc[bookIndex]['Genres_list'])
         genre_filtered = {g for g in genre if g not in IGNORE_GENRES}
 
@@ -115,8 +117,6 @@ def rec(bookTitle):
         comGenre = genres_filtered.intersection(genre_filtered)
 
         if not comGenre:
-            continue
-        if num_rating < 50000:
             continue
 
         wt = len(comGenre)
