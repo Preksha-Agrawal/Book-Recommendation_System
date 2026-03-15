@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book Recommender</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+            background: #f5f5f5;
+        }
+        h2 {
+            color: #333;
+        }
+        form {
+            margin-bottom: 30px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: 60%;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #357abd;
+        }
+        .card {
+            display: flex;
+            gap: 20px;
+            background: white;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            align-items: flex-start;
+        }
+        .card img {
+            width: 80px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            flex-shrink: 0;
+        }
+        .card-info {
+            flex: 1;
+        }
+        .card-info h3 {
+            margin: 0 0 6px 0;
+            color: #222;
+        }
+        .card-info p {
+            margin: 4px 0;
+            color: #555;
+            font-size: 14px;
+        }
+        .genre-tag {
+            display: inline-block;
+            background: #e8f0fe;
+            color: #4a90e2;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin: 2px 2px 0 0;
+        }
+        .error {
+            color: red;
+            font-size: 16px;
+        }
+        .rank {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4a90e2;
+            min-width: 30px;
+            align-self: center;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>📚 Book Recommendation System</h2>
+
+    <form method="POST">
+        <input type="text" name="book" placeholder="Enter a book name..." required>
+        <button type="submit">Recommend</button>
+    </form>
+
+    {% if recs %}
+        {% if recs[0] is string %}
+            <p class="error">{{ recs[0] }}</p>
+        {% else %}
+            <h3>Top Recommendations for "<span>{{ searched_book }}</span>":</h3>
+            {% for r in recs %}
+            <div class="card">
+                <span class="rank">{{ loop.index }}</span>
+                <img
+                    src="https://covers.openlibrary.org/b/title/{{ r.title | urlencode }}-L.jpg"
+                    alt="{{ r.title }}"
+                    onerror="this.src='https://via.placeholder.com/80x120?text=No+Cover'"
+                />
+                <div class="card-info">
+                    <h3>{{ r.title }}</h3>
+                    <p><b>Author:</b> {{ r.author }}</p>
+                    <p><b>Rating:</b> {{ r.rating }} ⭐ ({{ r.votes }} votes)</p>
+                    <p>
+                        {% for g in r.genres.split(', ') %}
+                            <span class="genre-tag">{{ g }}</span>
+                        {% endfor %}
+                    </p>
+                </div>
+            </div>
+            {% endfor %}
+        {% endif %}
+    {% endif %}
+
+</body>
+</html>
